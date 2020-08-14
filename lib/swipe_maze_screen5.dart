@@ -9,18 +9,18 @@ class SwipeMazeScreen5 extends StatefulWidget {
 
   @override
   _SwipeMazeScreen5State createState() => _SwipeMazeScreen5State(
-        x: maze.start.x.toDouble(),
-        y: maze.start.y.toDouble(),
+        offsetX: maze.start.x.toDouble(),
+        offsetY: maze.start.y.toDouble(),
       );
 }
 
 class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
-  double x = 0;
-  double y = 0;
+  double offsetX = 0;
+  double offsetY = 0;
   double deltaX = 0;
   double deltaY = 0;
 
-  _SwipeMazeScreen5State({this.x, this.y});
+  _SwipeMazeScreen5State({this.offsetX, this.offsetY});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onHorizontalDragEnd: (details) {
                 setState(() {
                   if (deltaX.abs() >= (constraints.maxWidth / 4)) {
-                    x -= constraints.maxWidth;
+                    offsetX -= constraints.maxWidth;
                   }
 
                   deltaX = 0;
@@ -44,14 +44,14 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onHorizontalDragUpdate: (details) {
                 setState(() {
                   if (deltaY == 0) {
-                    deltaX += details.delta.dx;
+                    deltaX += details.delta.dx * 2;
                   }
                 });
               },
               onVerticalDragEnd: (details) {
                 setState(() {
                   if (deltaY.abs() >= (constraints.maxHeight / 4)) {
-                    y -= constraints.maxHeight;
+                    offsetY -= constraints.maxHeight;
                   }
 
                   deltaY = 0;
@@ -60,11 +60,14 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onVerticalDragUpdate: (details) {
                 setState(() {
                   if (deltaX == 0) {
-                    deltaY += details.delta.dy;
+                    deltaY += details.delta.dy * 2;
                   }
                 });
               },
-              child: TileCanvas(translated),
+              child: TileCanvas(
+                matrix: matrix,
+                maze: widget.maze,
+              ),
             );
           },
         ),
@@ -72,27 +75,48 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
     );
   }
 
-  Matrix4 get translated =>
-      Matrix4Transform().translate(x: x + deltaX, y: y + deltaY).matrix4;
+  Matrix4 get matrix => Matrix4Transform()
+      .translate(
+        x: offsetX + deltaX,
+        y: offsetY + deltaY,
+      )
+      .matrix4;
 }
 
 class TileCanvas extends StatelessWidget {
   final Matrix4 matrix;
+  final Maze maze;
 
-  const TileCanvas(this.matrix);
+  const TileCanvas({this.matrix, this.maze});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: MapPainter(matrix),
+      painter: TilePainter(
+        matrix: matrix,
+      ),
     );
   }
 }
 
-class MapPainter extends CustomPainter {
+class TilePainter extends CustomPainter {
   final Matrix4 matrix;
+  final bool closedTop;
+  final bool closedRight;
+  final bool closedBottom;
+  final bool closedLeft;
+  final bool isStart;
+  final bool isEnd;
 
-  const MapPainter(this.matrix);
+  const TilePainter({
+    this.matrix,
+    this.closedTop,
+    this.closedRight,
+    this.closedBottom,
+    this.closedLeft,
+    this.isStart,
+    this.isEnd,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
