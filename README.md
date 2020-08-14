@@ -1,2 +1,1 @@
-# swipe-maze
-Swipe maze
+# Swipe maze
