@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
+import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:swipe_maze/maze.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 class SwipeMazeScreen5 extends StatefulWidget {
   final Maze maze;
@@ -10,14 +9,14 @@ class SwipeMazeScreen5 extends StatefulWidget {
 
   @override
   _SwipeMazeScreen5State createState() => _SwipeMazeScreen5State(
-        x: maze.start.x,
-        y: maze.start.y,
+        x: maze.start.x.toDouble(),
+        y: maze.start.y.toDouble(),
       );
 }
 
 class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
-  int x = 0;
-  int y = 0;
+  double x = 0;
+  double y = 0;
   Matrix4 matrix = Matrix4.identity();
 
   _SwipeMazeScreen5State({this.x, this.y});
@@ -28,16 +27,14 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Color(0xff000000),
-        child: MatrixGestureDetector(
-          shouldRotate: false,
-          shouldScale: false,
-          onMatrixUpdate: (m, tm, sm, rm) {
-            setState(
-              () {
-                matrix = m;
-              },
-            );
+        color: Colors.black,
+        child: GestureDetector(
+          onPanUpdate: (details) {
+            setState(() {
+              x += details.delta.dx;
+              y += details.delta.dy;
+              matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+            });
           },
           child: ClickableCanvas(matrix),
         ),

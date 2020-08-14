@@ -74,6 +74,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.8"
+  matrix4_transform:
+    dependency: "direct main"
+    description:
+      name: matrix4_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.4"
   matrix_gesture_detector:
     dependency: "direct main"
     description:
