@@ -18,6 +18,8 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double x = 0;
   double y = 0;
   Matrix4 matrix = Matrix4.identity();
+  bool scrollingHorizontally = false;
+  bool scrollingVertically = false;
 
   _SwipeMazeScreen5State({this.x, this.y});
 
@@ -29,11 +31,32 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
         height: double.infinity,
         color: Colors.black,
         child: GestureDetector(
-          onPanUpdate: (details) {
+          onHorizontalDragEnd: (details) {
             setState(() {
-              x += details.delta.dx;
-              y += details.delta.dy;
-              matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+              scrollingHorizontally = false;
+            });
+          },
+          onHorizontalDragUpdate: (details) {
+            setState(() {
+              if (!scrollingVertically) {
+                scrollingHorizontally = true;
+                x += details.delta.dx;
+                matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+              }
+            });
+          },
+          onVerticalDragEnd: (details) {
+            setState(() {
+              scrollingVertically = false;
+            });
+          },
+          onVerticalDragUpdate: (details) {
+            setState(() {
+              if (!scrollingHorizontally) {
+                scrollingVertically = true;
+                y += details.delta.dy;
+                matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+              }
             });
           },
           child: ClickableCanvas(matrix),
@@ -71,9 +94,32 @@ class MapPainter extends CustomPainter {
         paint.color = _color(i, j);
 
         canvas.drawRect(
-            Rect.fromLTWH(
-                i * size.width, j * size.height, size.width, size.height),
-            paint);
+          Rect.fromLTWH(
+            i * size.width,
+            j * size.height,
+            size.width,
+            size.height,
+          ),
+          paint,
+        );
+
+        final TextSpan span = TextSpan(
+          style: TextStyle(color: Colors.white),
+          text: '$i,$j',
+        );
+        final TextPainter tp = TextPainter(
+          text: span,
+          textAlign: TextAlign.left,
+          textDirection: TextDirection.ltr,
+        );
+        tp.layout();
+        tp.paint(
+          canvas,
+          Offset(
+            (i * size.width) + (size.width / 2),
+            (j * size.height) + (size.height / 2),
+          ),
+        );
       }
     }
   }
