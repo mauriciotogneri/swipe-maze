@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:swipe_maze/maze.dart';
-import 'package:swipe_maze/swipe_maze_screen2.dart';
+import 'package:swipe_maze/swipe_maze_screen3.dart';
 
 class SwipeMazeApp extends StatelessWidget {
   //   0 1 2 3
@@ -27,7 +27,7 @@ class SwipeMazeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SwipeMazeScreen2(maze),
+      home: SwipeMazeScreen3(maze),
     );
   }
 }

@@ -85,14 +85,14 @@ class Tile extends StatelessWidget {
   final bool isStart;
   final bool isEnd;
 
-  const Tile({
+  Tile({
     this.closedTop,
     this.closedRight,
     this.closedBottom,
     this.closedLeft,
     this.isStart,
     this.isEnd,
-  });
+  }) : super(key: UniqueKey());
 
   @override
   Widget build(BuildContext context) {
