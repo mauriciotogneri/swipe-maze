@@ -8,8 +8,14 @@ class TestTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('$x,$y'),
+    return Container(
+      color: _randomColor(),
+      child: Center(
+        child: Text('$x,$y'),
+      ),
     );
   }
+
+  Color _randomColor() => Color.fromARGB(
+      255, (x * 100) % 255, (y * 100) % 255, (x * y * 100) % 255);
 }
