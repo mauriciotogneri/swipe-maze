@@ -6,6 +6,8 @@ environment:
   sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
+  loop_page_view: ^1.0.9
+
   flutter:
     sdk: flutter
 

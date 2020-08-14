@@ -1,25 +1,10 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:swipe_maze/maze.dart';
 
 class SwipeMazeScreen extends StatelessWidget {
-  //   0 1 2 3
-  // 0 X O X X
-  // 1 X O O X
-  // 2 X X O X
-  // 3 O O O X
-  final Maze maze = Maze(
-    start: Point<int>(0, 3),
-    end: Point<int>(1, 0),
-    path: [
-      Point(1, 0),
-      Point(1, 1),
-      Point(2, 1),
-      Point(2, 2),
-      Point(0, 3),
-      Point(1, 3),
-      Point(2, 3),
-    ],
-  );
+  final Maze maze;
+
+  const SwipeMazeScreen(this.maze);
 
   @override
   Widget build(BuildContext context) {
@@ -80,26 +65,19 @@ class _MazeContainerState extends State<MazeContainer> {
           });
         }
       },
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.white,
-        child: CustomPaint(
-          painter: Tile(
-            closedTop: widget.maze.isClosed(x + 0, y - 1),
-            closedRight: widget.maze.isClosed(x + 1, y + 0),
-            closedBottom: widget.maze.isClosed(x + 0, y + 1),
-            closedLeft: widget.maze.isClosed(x - 1, y + 0),
-            isStart: widget.maze.isStart(x, y),
-            isEnd: widget.maze.isEnd(x, y),
-          ),
-        ),
+      child: Tile(
+        closedTop: widget.maze.isClosed(x + 0, y - 1),
+        closedRight: widget.maze.isClosed(x + 1, y + 0),
+        closedBottom: widget.maze.isClosed(x + 0, y + 1),
+        closedLeft: widget.maze.isClosed(x - 1, y + 0),
+        isStart: widget.maze.isStart(x, y),
+        isEnd: widget.maze.isEnd(x, y),
       ),
     );
   }
 }
 
-class Tile extends CustomPainter {
+class Tile extends StatelessWidget {
   final bool closedTop;
   final bool closedRight;
   final bool closedBottom;
@@ -108,6 +86,43 @@ class Tile extends CustomPainter {
   final bool isEnd;
 
   const Tile({
+    this.closedTop,
+    this.closedRight,
+    this.closedBottom,
+    this.closedLeft,
+    this.isStart,
+    this.isEnd,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.white,
+      child: CustomPaint(
+        painter: TilePainter(
+          closedTop: closedTop,
+          closedRight: closedRight,
+          closedBottom: closedBottom,
+          closedLeft: closedLeft,
+          isStart: isStart,
+          isEnd: isEnd,
+        ),
+      ),
+    );
+  }
+}
+
+class TilePainter extends CustomPainter {
+  final bool closedTop;
+  final bool closedRight;
+  final bool closedBottom;
+  final bool closedLeft;
+  final bool isStart;
+  final bool isEnd;
+
+  const TilePainter({
     this.closedTop,
     this.closedRight,
     this.closedBottom,
@@ -221,26 +236,4 @@ class Tile extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-class Maze {
-  final Point<int> start;
-  final Point<int> end;
-  final List<Point<int>> path;
-
-  Maze({this.start, this.end, this.path});
-
-  bool isStart(int x, int y) => (start.x == x) && (start.y == y);
-
-  bool isEnd(int x, int y) => (end.x == x) && (end.y == y);
-
-  bool isClosed(int x, int y) {
-    for (final point in path) {
-      if ((point.x == x) && (point.y == y)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
 }
