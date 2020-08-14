@@ -2,38 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:swipe_maze/maze.dart';
 
-class SwipeMazeScreen2 extends StatelessWidget {
+class SwipeMazeScreen2 extends StatefulWidget {
   final Maze maze;
 
   const SwipeMazeScreen2(this.maze);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MazeContainer(maze),
-    );
-  }
-}
-
-class MazeContainer extends StatefulWidget {
-  final Maze maze;
-
-  const MazeContainer(this.maze);
-
-  @override
-  _MazeContainerState createState() => _MazeContainerState(
+  _SwipeMazeScreen2State createState() => _SwipeMazeScreen2State(
         x: maze.start.x,
         y: maze.start.y,
       );
 }
 
-class _MazeContainerState extends State<MazeContainer> {
+class _SwipeMazeScreen2State extends State<SwipeMazeScreen2> {
   int x = 0;
   int y = 0;
   int lastVerticalPage = 0;
   int lastHorizontalPage = 0;
 
-  _MazeContainerState({this.x, this.y});
+  _SwipeMazeScreen2State({this.x, this.y});
 
   @override
   Widget build(BuildContext context) {
