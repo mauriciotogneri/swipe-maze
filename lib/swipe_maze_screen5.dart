@@ -17,6 +17,10 @@ class SwipeMazeScreen5 extends StatefulWidget {
 class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double x = 0;
   double y = 0;
+  double deltaX = 0;
+  double deltaY = 0;
+  double tileWidth = 0;
+  double tileHeight = 0;
   Matrix4 matrix = Matrix4.identity();
   bool scrollingHorizontally = false;
   bool scrollingVertically = false;
@@ -25,6 +29,14 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
 
   @override
   Widget build(BuildContext context) {
+    if (tileWidth == 0) {
+      tileWidth = MediaQuery.of(context).size.width;
+    }
+
+    if (tileHeight == 0) {
+      tileHeight = MediaQuery.of(context).size.height;
+    }
+
     return SafeArea(
       child: Container(
         width: double.infinity,
@@ -34,28 +46,42 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
           onHorizontalDragEnd: (details) {
             setState(() {
               scrollingHorizontally = false;
+
+              if (deltaX.abs() >= (tileWidth / 3)) {
+                x -= tileWidth;
+              }
+
+              deltaX = 0;
+              matrix = translated;
             });
           },
           onHorizontalDragUpdate: (details) {
             setState(() {
               if (!scrollingVertically) {
                 scrollingHorizontally = true;
-                x += details.delta.dx;
-                matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+                deltaX += details.delta.dx;
+                matrix = translated;
               }
             });
           },
           onVerticalDragEnd: (details) {
             setState(() {
               scrollingVertically = false;
+
+              if (deltaY.abs() >= (tileHeight / 3)) {
+                y -= tileHeight;
+              }
+
+              deltaY = 0;
+              matrix = translated;
             });
           },
           onVerticalDragUpdate: (details) {
             setState(() {
               if (!scrollingHorizontally) {
                 scrollingVertically = true;
-                y += details.delta.dy;
-                matrix = Matrix4Transform().translate(x: x, y: y).matrix4;
+                deltaY += details.delta.dy;
+                matrix = translated;
               }
             });
           },
@@ -64,6 +90,9 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
       ),
     );
   }
+
+  Matrix4 get translated =>
+      Matrix4Transform().translate(x: x + deltaX, y: y + deltaY).matrix4;
 }
 
 class ClickableCanvas extends StatelessWidget {
