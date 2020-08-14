@@ -19,8 +19,6 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double y = 0;
   double deltaX = 0;
   double deltaY = 0;
-  bool scrollingHorizontally = false;
-  bool scrollingVertically = false;
 
   _SwipeMazeScreen5State({this.x, this.y});
 
@@ -36,8 +34,6 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
             return GestureDetector(
               onHorizontalDragEnd: (details) {
                 setState(() {
-                  scrollingHorizontally = false;
-
                   if (deltaX.abs() >= (constraints.maxWidth / 4)) {
                     x -= constraints.maxWidth;
                   }
@@ -47,16 +43,13 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               },
               onHorizontalDragUpdate: (details) {
                 setState(() {
-                  if (!scrollingVertically) {
-                    scrollingHorizontally = true;
+                  if (deltaY == 0) {
                     deltaX += details.delta.dx;
                   }
                 });
               },
               onVerticalDragEnd: (details) {
                 setState(() {
-                  scrollingVertically = false;
-
                   if (deltaY.abs() >= (constraints.maxHeight / 4)) {
                     y -= constraints.maxHeight;
                   }
@@ -66,13 +59,12 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               },
               onVerticalDragUpdate: (details) {
                 setState(() {
-                  if (!scrollingHorizontally) {
-                    scrollingVertically = true;
+                  if (deltaX == 0) {
                     deltaY += details.delta.dy;
                   }
                 });
               },
-              child: ClickableCanvas(translated),
+              child: TileCanvas(translated),
             );
           },
         ),
@@ -84,10 +76,10 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
       Matrix4Transform().translate(x: x + deltaX, y: y + deltaY).matrix4;
 }
 
-class ClickableCanvas extends StatelessWidget {
+class TileCanvas extends StatelessWidget {
   final Matrix4 matrix;
 
-  const ClickableCanvas(this.matrix);
+  const TileCanvas(this.matrix);
 
   @override
   Widget build(BuildContext context) {
