@@ -19,9 +19,6 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double y = 0;
   double deltaX = 0;
   double deltaY = 0;
-  double tileWidth = 0;
-  double tileHeight = 0;
-  Matrix4 matrix = Matrix4.identity();
   bool scrollingHorizontally = false;
   bool scrollingVertically = false;
 
@@ -29,63 +26,55 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
 
   @override
   Widget build(BuildContext context) {
-    if (tileWidth == 0) {
-      tileWidth = MediaQuery.of(context).size.width;
-    }
-
-    if (tileHeight == 0) {
-      tileHeight = MediaQuery.of(context).size.height;
-    }
-
     return SafeArea(
       child: Container(
         width: double.infinity,
         height: double.infinity,
         color: Colors.black,
-        child: GestureDetector(
-          onHorizontalDragEnd: (details) {
-            setState(() {
-              scrollingHorizontally = false;
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return GestureDetector(
+              onHorizontalDragEnd: (details) {
+                setState(() {
+                  scrollingHorizontally = false;
 
-              if (deltaX.abs() >= (tileWidth / 3)) {
-                x -= tileWidth;
-              }
+                  if (deltaX.abs() >= (constraints.maxWidth / 4)) {
+                    x -= constraints.maxWidth;
+                  }
 
-              deltaX = 0;
-              matrix = translated;
-            });
-          },
-          onHorizontalDragUpdate: (details) {
-            setState(() {
-              if (!scrollingVertically) {
-                scrollingHorizontally = true;
-                deltaX += details.delta.dx;
-                matrix = translated;
-              }
-            });
-          },
-          onVerticalDragEnd: (details) {
-            setState(() {
-              scrollingVertically = false;
+                  deltaX = 0;
+                });
+              },
+              onHorizontalDragUpdate: (details) {
+                setState(() {
+                  if (!scrollingVertically) {
+                    scrollingHorizontally = true;
+                    deltaX += details.delta.dx;
+                  }
+                });
+              },
+              onVerticalDragEnd: (details) {
+                setState(() {
+                  scrollingVertically = false;
 
-              if (deltaY.abs() >= (tileHeight / 3)) {
-                y -= tileHeight;
-              }
+                  if (deltaY.abs() >= (constraints.maxHeight / 4)) {
+                    y -= constraints.maxHeight;
+                  }
 
-              deltaY = 0;
-              matrix = translated;
-            });
+                  deltaY = 0;
+                });
+              },
+              onVerticalDragUpdate: (details) {
+                setState(() {
+                  if (!scrollingHorizontally) {
+                    scrollingVertically = true;
+                    deltaY += details.delta.dy;
+                  }
+                });
+              },
+              child: ClickableCanvas(translated),
+            );
           },
-          onVerticalDragUpdate: (details) {
-            setState(() {
-              if (!scrollingHorizontally) {
-                scrollingVertically = true;
-                deltaY += details.delta.dy;
-                matrix = translated;
-              }
-            });
-          },
-          child: ClickableCanvas(matrix),
         ),
       ),
     );
