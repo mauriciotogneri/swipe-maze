@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swipe_maze/maze.dart';
-import 'package:swipe_maze/swipe_maze_screen.dart';
+import 'package:swipe_maze/tile.dart';
 
 class SwipeMazeScreen4 extends StatefulWidget {
   final Maze maze;
