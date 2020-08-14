@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:swipe_maze/maze.dart';
+import 'package:swipe_maze/test_tile.dart';
 
 class SwipeMazeScreen2 extends StatefulWidget {
   final Maze maze;
@@ -105,19 +106,5 @@ class _SwipeMazeScreen2State extends State<SwipeMazeScreen2> {
     print(lastPage - page);
     print('------------');
     lastPage = page;*/
-  }
-}
-
-class TestTile extends StatelessWidget {
-  final int x;
-  final int y;
-
-  const TestTile({this.x, this.y});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('$x,$y'),
-    );
   }
 }
