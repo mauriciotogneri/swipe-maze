@@ -19,8 +19,8 @@ class _SwipeMazeScreen3State extends State<SwipeMazeScreen3> {
   int y = 0;
   int lastVerticalPage = 1000;
   int lastHorizontalPage = 1000;
-  final controllerVertical = new PageController(initialPage: 1000);
-  final controllerHorizontal = new PageController(initialPage: 1000);
+  final controllerVertical = PageController(initialPage: 1000);
+  final controllerHorizontal = PageController(initialPage: 1000);
 
   _SwipeMazeScreen3State({this.x, this.y});
 
