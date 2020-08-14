@@ -28,7 +28,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.black,
+        color: Colors.white,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return GestureDetector(
@@ -44,7 +44,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onHorizontalDragUpdate: (details) {
                 setState(() {
                   if (deltaY == 0) {
-                    deltaX += details.delta.dx * 2;
+                    deltaX += details.delta.dx;
                   }
                 });
               },
@@ -60,7 +60,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onVerticalDragUpdate: (details) {
                 setState(() {
                   if (deltaX == 0) {
-                    deltaY += details.delta.dy * 2;
+                    deltaY += details.delta.dy;
                   }
                 });
               },
@@ -92,30 +92,21 @@ class TileCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: TilePainter(
+      painter: TilePainter1(
         matrix: matrix,
+        maze: maze,
       ),
     );
   }
 }
 
-class TilePainter extends CustomPainter {
+class TilePainter1 extends CustomPainter {
   final Matrix4 matrix;
-  final bool closedTop;
-  final bool closedRight;
-  final bool closedBottom;
-  final bool closedLeft;
-  final bool isStart;
-  final bool isEnd;
+  final Maze maze;
 
-  const TilePainter({
+  const TilePainter1({
     this.matrix,
-    this.closedTop,
-    this.closedRight,
-    this.closedBottom,
-    this.closedLeft,
-    this.isStart,
-    this.isEnd,
+    this.maze,
   });
 
   @override
@@ -163,4 +154,132 @@ class TilePainter extends CustomPainter {
 
   Color _color(int i, int j) => Color.fromARGB(
       255, (i * 100) % 255, (j * 100) % 255, (i * j * 100) % 255);
+}
+
+class TilePainter2 extends CustomPainter {
+  final Matrix4 matrix;
+  final Maze maze;
+
+  const TilePainter2({this.matrix, this.maze});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.transform(matrix.storage);
+
+    final paintWalls = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.fill;
+
+    final paintStart = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
+
+    final paintEnd = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.fill;
+
+    for (int i = 0; i < 5; i++) {
+      // TODO(momo): remove harcoded width
+      for (int j = 0; j < 5; j++) {
+        // TODO(momo): remove harcoded height
+
+        final path = Path();
+
+        // top-left
+        path.addRect(Rect.fromLTWH(
+          i * size.width,
+          j * size.height,
+          size.width * 1 / 3,
+          size.height * 1 / 3,
+        ));
+
+        // top-right
+        path.addRect(Rect.fromLTWH(
+          (i * size.width) + (size.width * 2 / 3),
+          j * size.height,
+          size.width,
+          size.height * 1 / 3,
+        ));
+
+        // bottom-right
+        path.addRect(Rect.fromLTWH(
+          (i * size.width) + (size.width * 2 / 3),
+          (j * size.height) + (size.height * 2 / 3),
+          size.width,
+          size.height,
+        ));
+
+        // bottom-left
+        path.addRect(Rect.fromLTWH(
+          i * size.width,
+          (j * size.height) + (size.height * 2 / 3),
+          size.width * 1 / 3,
+          size.height,
+        ));
+
+        if (maze.isClosed(i + 0, j - 1)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 1 / 3),
+            j * size.height,
+            size.width * 2 / 3,
+            size.height * 1 / 3,
+          ));
+        }
+
+        if (maze.isClosed(i + 1, j + 0)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 2 / 3),
+            (j * size.height) + size.height * 1 / 3,
+            size.width,
+            size.height * 2 / 3,
+          ));
+        }
+
+        if (maze.isClosed(i + 0, j + 1)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 1 / 3),
+            (j * size.height) + (size.height * 2 / 3),
+            size.width * 2 / 3,
+            size.height,
+          ));
+        }
+
+        if (maze.isClosed(i - 1, j + 0)) {
+          path.addRect(Rect.fromLTWH(
+            i * size.width,
+            (j * size.height) + (size.height * 1 / 3),
+            size.width * 1 / 3,
+            size.height * 2 / 3,
+          ));
+        }
+
+        if (maze.isStart(i, j)) {
+          canvas.drawCircle(
+            Offset(
+              (i * size.width) + (size.width / 2),
+              (j * size.height) + (size.height / 2),
+            ),
+            size.width / 12,
+            paintStart,
+          );
+        }
+
+        if (maze.isEnd(i, j)) {
+          canvas.drawCircle(
+            Offset(
+              (i * size.width) + (size.width / 2),
+              (j * size.height) + (size.height / 2),
+            ),
+            size.width / 12,
+            paintEnd,
+          );
+        }
+
+        canvas.drawPath(path, paintWalls);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
