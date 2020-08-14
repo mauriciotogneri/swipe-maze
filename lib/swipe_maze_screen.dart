@@ -54,12 +54,9 @@ class _SwipeMazeScreenState extends State<SwipeMazeScreen> {
         }
       },
       child: Tile(
-        closedTop: widget.maze.isClosed(x + 0, y - 1),
-        closedRight: widget.maze.isClosed(x + 1, y + 0),
-        closedBottom: widget.maze.isClosed(x + 0, y + 1),
-        closedLeft: widget.maze.isClosed(x - 1, y + 0),
-        isStart: widget.maze.isStart(x, y),
-        isEnd: widget.maze.isEnd(x, y),
+        x: x,
+        y: y,
+        maze: widget.maze,
       ),
     );
   }

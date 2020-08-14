@@ -30,19 +30,15 @@ class _SwipeMazeScreen4State extends State<SwipeMazeScreen4> {
       controller: controllerVertical,
       scrollDirection: Axis.vertical,
       onPageChanged: _onVerticalScroll,
-      //physics: CustomScrollPhysics(),
       itemBuilder: (context, index) {
         return PageView.builder(
           controller: controllerHorizontal,
           scrollDirection: Axis.horizontal,
           onPageChanged: _onHorizontalScroll,
           itemBuilder: (context, index) => Tile(
-            closedTop: widget.maze.isClosed(x + 0, y - 1),
-            closedRight: widget.maze.isClosed(x + 1, y + 0),
-            closedBottom: widget.maze.isClosed(x + 0, y + 1),
-            closedLeft: widget.maze.isClosed(x - 1, y + 0),
-            isStart: widget.maze.isStart(x, y),
-            isEnd: widget.maze.isEnd(x, y),
+            x: x,
+            y: y,
+            maze: widget.maze,
           ),
         );
       },

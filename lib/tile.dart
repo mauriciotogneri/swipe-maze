@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:swipe_maze/maze.dart';
 
 class Tile extends StatelessWidget {
-  final bool closedTop;
-  final bool closedRight;
-  final bool closedBottom;
-  final bool closedLeft;
-  final bool isStart;
-  final bool isEnd;
+  final int x;
+  final int y;
+  final Maze maze;
 
-  Tile({
-    this.closedTop,
-    this.closedRight,
-    this.closedBottom,
-    this.closedLeft,
-    this.isStart,
-    this.isEnd,
-  }) : super(key: UniqueKey());
+  const Tile({this.x, this.y, this.maze});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +16,12 @@ class Tile extends StatelessWidget {
       color: Colors.white,
       child: CustomPaint(
         painter: TilePainter(
-          closedTop: closedTop,
-          closedRight: closedRight,
-          closedBottom: closedBottom,
-          closedLeft: closedLeft,
-          isStart: isStart,
-          isEnd: isEnd,
+          closedTop: maze.isClosed(x + 0, y - 1),
+          closedRight: maze.isClosed(x + 1, y + 0),
+          closedBottom: maze.isClosed(x + 0, y + 1),
+          closedLeft: maze.isClosed(x - 1, y + 0),
+          isStart: maze.isStart(x, y),
+          isEnd: maze.isEnd(x, y),
         ),
       ),
     );
