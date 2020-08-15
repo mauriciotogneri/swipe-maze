@@ -48,6 +48,16 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
             return GestureDetector(
               onHorizontalDragUpdate: (details) {
                 setState(() {
+                  if ((details.delta.dx < 0) &&
+                      (widget.maze.isClosed(pageX + 1, pageY)) &&
+                      (deltaX <= 0)) {
+                    return;
+                  }
+                  if ((details.delta.dx > 0) &&
+                      (widget.maze.isClosed(pageX - 1, pageY)) &&
+                      (deltaX >= 0)) {
+                    return;
+                  }
                   if (deltaY == 0) {
                     deltaX += details.delta.dx;
                   }
@@ -68,6 +78,16 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               },
               onVerticalDragUpdate: (details) {
                 setState(() {
+                  if ((details.delta.dy < 0) &&
+                      (widget.maze.isClosed(pageX, pageY + 1)) &&
+                      (deltaY <= 0)) {
+                    return;
+                  }
+                  if ((details.delta.dy > 0) &&
+                      (widget.maze.isClosed(pageX, pageY - 1)) &&
+                      (deltaY >= 0)) {
+                    return;
+                  }
                   if (deltaX == 0) {
                     deltaY += details.delta.dy;
                   }
