@@ -46,9 +46,9 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                 setState(() {
                   if (deltaX.abs() >= (constraints.maxWidth / 4)) {
                     if (deltaX < 0) {
-                      pageX--;
-                    } else {
                       pageX++;
+                    } else {
+                      pageX--;
                     }
                   }
 
@@ -66,9 +66,9 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                 setState(() {
                   if (deltaY.abs() >= (constraints.maxHeight / 4)) {
                     if (deltaY < 0) {
-                      pageY--;
-                    } else {
                       pageY++;
+                    } else {
+                      pageY--;
                     }
                   }
 
@@ -83,8 +83,8 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                 });
               },
               child: MazeCanvas(
-                x: (pageX * maxWidth) + deltaX,
-                y: (pageY * maxHeight) + deltaY,
+                x: (-pageX * maxWidth) + deltaX,
+                y: (-pageY * maxHeight) + deltaY,
                 maze: widget.maze,
               ),
             );
