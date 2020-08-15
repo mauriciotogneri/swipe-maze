@@ -9,18 +9,20 @@ class SwipeMazeScreen5 extends StatefulWidget {
 
   @override
   _SwipeMazeScreen5State createState() => _SwipeMazeScreen5State(
-        offsetX: maze.start.x.toDouble(),
-        offsetY: maze.start.y.toDouble(),
+        pageX: maze.start.x,
+        pageY: maze.start.y,
       );
 }
 
 class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
-  double offsetX = 0;
-  double offsetY = 0;
+  int pageX = 0;
+  int pageY = 0;
   double deltaX = 0;
   double deltaY = 0;
+  double maxWidth = 0;
+  double maxHeight = 0;
 
-  _SwipeMazeScreen5State({this.offsetX, this.offsetY});
+  _SwipeMazeScreen5State({this.pageX, this.pageY});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,23 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
         color: Colors.white,
         child: LayoutBuilder(
           builder: (context, constraints) {
+            if (maxWidth == 0) {
+              maxWidth = constraints.maxWidth;
+            }
+
+            if (maxHeight == 0) {
+              maxHeight = constraints.maxHeight;
+            }
+
             return GestureDetector(
               onHorizontalDragEnd: (details) {
                 setState(() {
                   if (deltaX.abs() >= (constraints.maxWidth / 4)) {
-                    offsetX -= constraints.maxWidth;
+                    if (deltaX < 0) {
+                      pageX--;
+                    } else {
+                      pageX++;
+                    }
                   }
 
                   deltaX = 0;
@@ -51,7 +65,11 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               onVerticalDragEnd: (details) {
                 setState(() {
                   if (deltaY.abs() >= (constraints.maxHeight / 4)) {
-                    offsetY -= constraints.maxHeight;
+                    if (deltaY < 0) {
+                      pageY--;
+                    } else {
+                      pageY++;
+                    }
                   }
 
                   deltaY = 0;
@@ -75,12 +93,14 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
     );
   }
 
-  Matrix4 get matrix => Matrix4Transform()
-      .translate(
-        x: offsetX + deltaX,
-        y: offsetY + deltaY,
-      )
-      .matrix4;
+  Matrix4 get matrix {
+    return Matrix4Transform()
+        .translate(
+          x: (pageX * maxWidth) + deltaX,
+          y: (pageY * maxHeight) + deltaY,
+        )
+        .matrix4;
+  }
 }
 
 class TileCanvas extends StatelessWidget {
