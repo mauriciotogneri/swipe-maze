@@ -10,6 +10,8 @@ class SwipeMazeApp extends StatelessWidget {
   // 2 X X O X
   // 3 O O O X
   final Maze maze = Maze(
+    width: 5,
+    height: 5,
     start: Point<int>(0, 3),
     end: Point<int>(0, 0),
     path: [

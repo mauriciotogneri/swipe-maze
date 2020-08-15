@@ -1,11 +1,13 @@
 import 'dart:math';
 
 class Maze {
+  final int width;
+  final int height;
   final Point<int> start;
   final Point<int> end;
   final List<Point<int>> path;
 
-  Maze({this.start, this.end, this.path});
+  Maze({this.width, this.height, this.start, this.end, this.path});
 
   bool isStart(int x, int y) => (start.x == x) && (start.y == y);
 

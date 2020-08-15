@@ -22,6 +22,8 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double maxWidth = 0;
   double maxHeight = 0;
 
+  static final double dragLimit = 0.1;
+
   _SwipeMazeScreen5State({this.pageX, this.pageY});
 
   @override
@@ -44,7 +46,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
             return GestureDetector(
               onHorizontalDragEnd: (details) {
                 setState(() {
-                  if (deltaX.abs() >= (constraints.maxWidth / 4)) {
+                  if (deltaX.abs() >= (constraints.maxWidth * dragLimit)) {
                     if (deltaX < 0) {
                       pageX++;
                     } else {
@@ -64,7 +66,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               },
               onVerticalDragEnd: (details) {
                 setState(() {
-                  if (deltaY.abs() >= (constraints.maxHeight / 4)) {
+                  if (deltaY.abs() >= (constraints.maxHeight * dragLimit)) {
                     if (deltaY < 0) {
                       pageY++;
                     } else {
@@ -198,11 +200,8 @@ class MazePainter extends CustomPainter {
       ..color = Colors.red
       ..style = PaintingStyle.fill;
 
-    for (int i = 0; i < 5; i++) {
-      // TODO(momo): remove harcoded width
-      for (int j = 0; j < 5; j++) {
-        // TODO(momo): remove harcoded height
-
+    for (int i = 0; i < maze.width; i++) {
+      for (int j = 0; j < maze.height; j++) {
         final path = Path();
 
         // top-left
