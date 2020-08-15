@@ -23,6 +23,8 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
   double maxHeight = 0;
 
   static final double dragLimit = 0.1;
+  static final double animationSpeedX = 0.05;
+  static final double animationSpeedY = 0.05;
 
   _SwipeMazeScreen5State({this.pageX, this.pageY});
 
@@ -48,13 +50,13 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                 setState(() {
                   if (deltaX.abs() >= (maxWidth * dragLimit)) {
                     if (deltaX < 0) {
-                      pageX++;
+                      _startAnimationX(-(maxWidth * animationSpeedX));
                     } else {
-                      pageX--;
+                      _startAnimationX(maxWidth * animationSpeedX);
                     }
+                  } else {
+                    deltaX = 0;
                   }
-
-                  deltaX = 0;
                 });
               },
               onHorizontalDragUpdate: (details) {
@@ -68,13 +70,13 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                 setState(() {
                   if (deltaY.abs() >= (maxHeight * dragLimit)) {
                     if (deltaY < 0) {
-                      pageY++;
+                      _startAnimationY(-(maxHeight * animationSpeedY));
                     } else {
-                      pageY--;
+                      _startAnimationY(maxHeight * animationSpeedY);
                     }
+                  } else {
+                    deltaY = 0;
                   }
-
-                  deltaY = 0;
                 });
               },
               onVerticalDragUpdate: (details) {
@@ -94,6 +96,44 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
         ),
       ),
     );
+  }
+
+  void _startAnimationX(double delta) {
+    setState(() {
+      deltaX += delta;
+
+      if (deltaX.abs() >= maxWidth) {
+        if (deltaX < 0) {
+          pageX++;
+        } else {
+          pageX--;
+        }
+
+        deltaX = 0;
+      } else {
+        Future.delayed(
+            const Duration(milliseconds: 16), () => _startAnimationX(delta));
+      }
+    });
+  }
+
+  void _startAnimationY(double delta) {
+    setState(() {
+      deltaY += delta;
+
+      if (deltaY.abs() >= maxHeight) {
+        if (deltaY < 0) {
+          pageY++;
+        } else {
+          pageY--;
+        }
+
+        deltaY = 0;
+      } else {
+        Future.delayed(
+            const Duration(milliseconds: 16), () => _startAnimationY(delta));
+      }
+    });
   }
 }
 
