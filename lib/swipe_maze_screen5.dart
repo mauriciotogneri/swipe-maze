@@ -46,6 +46,13 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
             }
 
             return GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                setState(() {
+                  if (deltaY == 0) {
+                    deltaX += details.delta.dx;
+                  }
+                });
+              },
               onHorizontalDragEnd: (details) {
                 setState(() {
                   if (deltaX.abs() >= (maxWidth * dragLimit)) {
@@ -59,10 +66,10 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                   }
                 });
               },
-              onHorizontalDragUpdate: (details) {
+              onVerticalDragUpdate: (details) {
                 setState(() {
-                  if (deltaY == 0) {
-                    deltaX += details.delta.dx;
+                  if (deltaX == 0) {
+                    deltaY += details.delta.dy;
                   }
                 });
               },
@@ -76,13 +83,6 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                     }
                   } else {
                     deltaY = 0;
-                  }
-                });
-              },
-              onVerticalDragUpdate: (details) {
-                setState(() {
-                  if (deltaX == 0) {
-                    deltaY += details.delta.dy;
                   }
                 });
               },
