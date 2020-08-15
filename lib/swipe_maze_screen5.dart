@@ -105,7 +105,7 @@ class MazeCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: TestMazePainter(
+      painter: MazePainter(
         matrix: matrix,
         maze: maze,
       ),
@@ -217,7 +217,7 @@ class MazePainter extends CustomPainter {
         path.addRect(Rect.fromLTWH(
           (i * size.width) + (size.width * 2 / 3),
           j * size.height,
-          size.width,
+          size.width * 1 / 3,
           size.height * 1 / 3,
         ));
 
@@ -225,8 +225,8 @@ class MazePainter extends CustomPainter {
         path.addRect(Rect.fromLTWH(
           (i * size.width) + (size.width * 2 / 3),
           (j * size.height) + (size.height * 2 / 3),
-          size.width,
-          size.height,
+          size.width * 1 / 3,
+          size.height * 1 / 3,
         ));
 
         // bottom-left
@@ -234,42 +234,46 @@ class MazePainter extends CustomPainter {
           i * size.width,
           (j * size.height) + (size.height * 2 / 3),
           size.width * 1 / 3,
-          size.height,
+          size.height * 1 / 3,
         ));
 
-        if (maze.isClosed(i + 0, j - 1)) {
-          path.addRect(Rect.fromLTWH(
-            (i * size.width) + (size.width * 1 / 3),
-            j * size.height,
-            size.width * 2 / 3,
-            size.height * 1 / 3,
-          ));
-        }
-
-        if (maze.isClosed(i + 1, j + 0)) {
-          path.addRect(Rect.fromLTWH(
-            (i * size.width) + (size.width * 2 / 3),
-            (j * size.height) + size.height * 1 / 3,
-            size.width,
-            size.height * 2 / 3,
-          ));
-        }
-
-        if (maze.isClosed(i + 0, j + 1)) {
-          path.addRect(Rect.fromLTWH(
-            (i * size.width) + (size.width * 1 / 3),
-            (j * size.height) + (size.height * 2 / 3),
-            size.width * 2 / 3,
-            size.height,
-          ));
-        }
-
+        // left
         if (maze.isClosed(i - 1, j + 0)) {
           path.addRect(Rect.fromLTWH(
             i * size.width,
             (j * size.height) + (size.height * 1 / 3),
             size.width * 1 / 3,
-            size.height * 2 / 3,
+            size.height * 1 / 3,
+          ));
+        }
+
+        // top
+        if (maze.isClosed(i + 0, j - 1)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 1 / 3),
+            j * size.height,
+            size.width * 1 / 3,
+            size.height * 1 / 3,
+          ));
+        }
+
+        // right
+        if (maze.isClosed(i + 1, j + 0)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 2 / 3),
+            (j * size.height) + size.height * 1 / 3,
+            size.width * 1 / 3,
+            size.height * 1 / 3,
+          ));
+        }
+
+        // bottom
+        if (maze.isClosed(i + 0, j + 1)) {
+          path.addRect(Rect.fromLTWH(
+            (i * size.width) + (size.width * 1 / 3),
+            (j * size.height) + (size.height * 2 / 3),
+            size.width * 1 / 3,
+            size.height * 1 / 3,
           ));
         }
 
