@@ -82,8 +82,9 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
                   }
                 });
               },
-              child: TileCanvas(
-                matrix: matrix,
+              child: MazeCanvas(
+                x: (pageX * maxWidth) + deltaX,
+                y: (pageY * maxHeight) + deltaY,
                 maze: widget.maze,
               ),
             );
@@ -92,39 +93,38 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
       ),
     );
   }
-
-  Matrix4 get matrix {
-    return Matrix4Transform()
-        .translate(
-          x: (pageX * maxWidth) + deltaX,
-          y: (pageY * maxHeight) + deltaY,
-        )
-        .matrix4;
-  }
 }
 
-class TileCanvas extends StatelessWidget {
-  final Matrix4 matrix;
+class MazeCanvas extends StatelessWidget {
+  final double x;
+  final double y;
   final Maze maze;
 
-  const TileCanvas({this.matrix, this.maze});
+  const MazeCanvas({this.x, this.y, this.maze});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: TilePainter1(
+      painter: TestMazePainter(
         matrix: matrix,
         maze: maze,
       ),
     );
   }
+
+  Matrix4 get matrix => Matrix4Transform()
+      .translate(
+        x: x,
+        y: y,
+      )
+      .matrix4;
 }
 
-class TilePainter1 extends CustomPainter {
+class TestMazePainter extends CustomPainter {
   final Matrix4 matrix;
   final Maze maze;
 
-  const TilePainter1({
+  const TestMazePainter({
     this.matrix,
     this.maze,
   });
@@ -176,11 +176,11 @@ class TilePainter1 extends CustomPainter {
       255, (i * 100) % 255, (j * 100) % 255, (i * j * 100) % 255);
 }
 
-class TilePainter2 extends CustomPainter {
+class MazePainter extends CustomPainter {
   final Matrix4 matrix;
   final Maze maze;
 
-  const TilePainter2({this.matrix, this.maze});
+  const MazePainter({this.matrix, this.maze});
 
   @override
   void paint(Canvas canvas, Size size) {
