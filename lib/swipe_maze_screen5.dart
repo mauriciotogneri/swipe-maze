@@ -46,7 +46,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
             return GestureDetector(
               onHorizontalDragEnd: (details) {
                 setState(() {
-                  if (deltaX.abs() >= (constraints.maxWidth * dragLimit)) {
+                  if (deltaX.abs() >= (maxWidth * dragLimit)) {
                     if (deltaX < 0) {
                       pageX++;
                     } else {
@@ -66,7 +66,7 @@ class _SwipeMazeScreen5State extends State<SwipeMazeScreen5> {
               },
               onVerticalDragEnd: (details) {
                 setState(() {
-                  if (deltaY.abs() >= (constraints.maxHeight * dragLimit)) {
+                  if (deltaY.abs() >= (maxHeight * dragLimit)) {
                     if (deltaY < 0) {
                       pageY++;
                     } else {
